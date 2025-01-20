@@ -1,0 +1,100 @@
+fetch('http://139.59.87.79:4030/api/auth/login', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json', // Sending JSON data
+  },
+  body: JSON.stringify({
+    role: "admin",
+    email: "tushar@gmail.com"
+  })
+})
+.then(response => response.json()) // Parse the response as JSON
+.then(data => {
+  console.log('Login response:', data); // Log the login response
+
+  if (data && data.success && data.message === 'OTP verification is Pending') {
+    console.log('OTP is pending. Proceeding with OTP verification...');
+
+    // Step 2: Submit OTP with updated payload
+    return fetch('http://139.59.87.79:4030/api/auth/verify-otp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Sending JSON data
+      },
+      body: JSON.stringify({
+        isTokenRequired: true, // Flag for token requirement
+        otp: '7825', // OTP to verify
+        otpId: '678b96f54bb88bcd1591fc0d', // Updated OTP ID
+        role: 'admin', // Role for OTP verification
+        userId: '678573a3b1acb3a128c71ef0' // Updated User ID
+      })
+    }).then(response => response.json()).then(otpData => {
+      console.log('OTP verification response:', otpData); // Log OTP verification response
+
+      if (otpData && otpData.success) {
+        console.log('OTP verified successfully.');
+        
+        // Log the token from OTP verification (if available)
+        console.log('OTP verification returned token:', otpData.token);
+
+        // Step 3: Verify token after OTP verification using data from OTP verification response
+    // Step 3: Verify token after OTP verification with updated payload
+        return fetch('http://139.59.87.79:4030/api/auth/verify-token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Sending JSON data
+          },
+          body: JSON.stringify({
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Nzg1NzNhM2IxYWNiM2ExMjhjNzFlZjAiLCJuYW1lIjoiU2h1YmhhbSBHb3lhbCIsImVtYWlsIjoidHVzaGFyQGdtYWlsLmNvbSIsImNvdW50cnlDb2RlIjo5MSwicm9sZSI6WyJhZG1pbiJdLCJjb21wYW55IjoiIiwiZGlzYWJsZWQiOmZhbHNlLCJpc1ZlcmlmaWVkIjp0cnVlLCJfX3YiOjAsImlhdCI6MTczNzIwODMzNCwiZXhwIjoxNzM4MDcyMzM0fQ.X4BtJ3nmNHx3fbTeUm9NOjBGFwEo7Z96EOwgpaQ9-0M', // Provided token
+          })
+        }).then(response => response.json()).then(tokenVerificationData => {
+          console.log('Token verification response:', tokenVerificationData); // Log token verification response
+
+          if (tokenVerificationData && tokenVerificationData.success) {
+            console.log('Token verified successfully.');
+
+
+            // Step 4: Fetch profile data after successful token verification
+            return fetch('http://139.59.87.79:4030/api/auth/profile', {
+              method: 'GET', // GET request for profile data
+              headers: {
+                'Authorization': `Bearer ${tokenVerificationData.token}`, // Use the token returned after verification
+                'Content-Type': 'application/json'
+              }
+            }).then(response => response.json()).then(profileData => {
+              // Using the provided payload as a mock response for profile data
+              const mockProfileData = {
+                success: true,
+                message: "Valid token.",
+                data: {
+                  _id: "678573a3b1acb3a128c71ef0",
+                  name: "Shubham Goyal",
+                  email: "tushar@gmail.com",
+                  countryCode: 91,
+                  role: ["admin"],
+                  company: "",
+                  disabled: false,
+                  isVerified: true,
+                  __v: 0,
+                  iat: 1737208533,
+                  exp: 1738072533
+                }
+              };
+
+              console.log('Profile data:', mockProfileData); // Handle the profile data
+            });
+          } else {
+            throw new Error('Token verification failed.');
+          }
+        });
+      } else {
+        throw new Error('OTP verification failed.');
+      }
+    });
+  } else {
+    throw new Error('Login failed or OTP not pending');
+  }
+})
+.catch(error => {
+  console.error('Error:', error); // Handle any errors that occur
+});
