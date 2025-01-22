@@ -12,7 +12,8 @@ export default function LoginScreen() {
   const [name, setName] = useState('');
   const [otp, setOtp] = useState('');
   const [isOtpRequired, setIsOtpRequired] = useState(false);
-  const [otpDetails, setOtpDetails] = useState({ otpId: '', userId: '', role: '' });
+  const [otpDetails, setOtpDetails] = useState({ otpId: ''});
+  const [loginDetails, setLoginDetails] = useState({userId: ''});
   const [token, setToken] = useState(''); // New state for storing the token
 
   // Step 1: Handle Login
@@ -44,12 +45,12 @@ export default function LoginScreen() {
 
       if (loginData.success && loginData.message === 'OTP verification is Pending') {
 
-        console.log("login successful - now otp")
+        console.log("login successful - now send otp");
 
-        setOtpDetails({
-          otpId: loginData.data.otpId,
-          userId: loginData.data.userId,
-          role: loginData.data.role,
+        await handleSendOtp();  // calling send otp !!
+        
+        setLoginDetails({
+          userId: loginData.data._id,
         });
         setIsOtpRequired(true);
       } else {
@@ -67,15 +68,15 @@ export default function LoginScreen() {
         Alert.alert('Validation', 'Please enter the OTP');
         return;
       }
-  
       const otpResponse = await fetch('http://139.59.87.79:4030/api/auth/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           isTokenRequired: true,
           otp, // User-entered OTP
-          otpId: otpDetails.userId, // Assuming `_id` from login response serves as `otpId`
-          role: otpDetails.role[0], // Use the first role if it's an array
+          userId: loginDetails.userId,
+          otpId : otpDetails.otpId, // Assuming `_id` from login response serves as `otpId`
+          role: role, // Use the first role if it's an array
         }),
       });
   
@@ -97,7 +98,38 @@ export default function LoginScreen() {
     }
   };
   
+  const handleSendOtp = async () => {
+    try {
+      if (!otp) {
+        Alert.alert('Validation', 'Please enter the OTP');
+        return;
+      }
   
+      const otpResponse = await fetch('http://139.59.87.79:4030/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          role, // User-entered OTP
+          email,
+        }),
+      });
+  
+      const otpData = await otpResponse.json();
+  
+      if (otpData.success) {
+
+        console.log("otp sent succcessful - now verify it ")
+       
+        setOtpDetails({otpId :otpData.data.otpId,});
+        setIsOtpRequired(true);
+
+      } else {
+        Alert.alert('Error', otpData.message || 'OTP verification failed');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'An error occurred during OTP verification.');
+    }
+  };
   
 
   // // Step 3: Handle Token Verification

@@ -13,15 +13,15 @@ const WellnessTab: React.FC = () => {
       {/* Banner Section */}
       <View style={styles.bannerContainer}>
         <Image
-          source={{ uri: 'https://via.placeholder.com/500x200?text=Wellness+Card+Banner' }}
+          source={require('../../assets/images/wellness.png')}
           style={styles.bannerImage}
         />
       </View>
 
       {/* Title and Description Section */}
       <View style={styles.headerContainer}>
-        <Text style={styles.title}>Vedha's Health Care</Text>
-        <Text style={styles.subtitle}>VEDHA’S WELLNESS CARD</Text>
+        <Text style={styles.title}>Ewa's Health Care</Text>
+        <Text style={styles.subtitle}>EWA’S WELLNESS CARD</Text>
         <Text style={styles.subtitleDetail}>Get access to top-quality health services</Text>
       </View>
 
@@ -50,40 +50,56 @@ const WellnessTab: React.FC = () => {
       </View>
 
       {/* Exclusive Offers Section */}
-      <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>
-          <Icon name="gift" size={20} color="#D35400" /> Exclusive 110 Test List
-        </Text>
-        <View style={styles.offerList}>
-          <TouchableOpacity style={styles.offerCard} onPress={() => handleOfferClick('Hematology')}>
-            <Text style={styles.offerText}>Hematology - Complete Blood Count, ESR, Platelet Count</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.offerCard} onPress={() => handleOfferClick('Bio-Chemistry')}>
-            <Text style={styles.offerText}>Bio-Chemistry - Diabetic Tests, Lipid Profile, Renal Function Test</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.offerCard} onPress={() => handleOfferClick('Vitamin Profile')}>
-            <Text style={styles.offerText}>Vitamin Profile - Vitamin D3, B12, Calcium</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+     <View style={[styles.sectionContainer, { backgroundColor: 'rgba(7, 144, 148, 0.1)' }]}>
+       <Text style={[styles.sectionTitle, { color: '#02989D' }]}>
+         <Icon name="gift" size={20} color="#02989D" /> Exclusive 110 Test List
+       </Text>
+       <View style={styles.offerList}>
+         <TouchableOpacity
+           style={[styles.offerCard, { backgroundColor: '#fff', borderColor: '#02989D', borderWidth: 1 }]}
+           onPress={() => handleOfferClick('Hematology')}
+         >
+           <Text style={[styles.offerText, { color: '#333' }]}>
+             Hematology - Complete Blood Count, ESR, Platelet Count
+           </Text>
+         </TouchableOpacity>
+         <TouchableOpacity
+           style={[styles.offerCard, { backgroundColor: '#fff', borderColor: '#02989D', borderWidth: 1 }]}
+           onPress={() => handleOfferClick('Bio-Chemistry')}
+         >
+           <Text style={[styles.offerText, { color: '#333' }]}>
+             Bio-Chemistry - Diabetic Tests, Lipid Profile, Renal Function Test
+           </Text>
+         </TouchableOpacity>
+         <TouchableOpacity
+           style={[styles.offerCard, { backgroundColor: '#fff', borderColor: '#02989D', borderWidth: 1 }]}
+           onPress={() => handleOfferClick('Vitamin Profile')}
+         >
+           <Text style={[styles.offerText, { color: '#333' }]}>
+             Vitamin Profile - Vitamin D3, B12, Calcium
+           </Text>
+         </TouchableOpacity>
+       </View>
+     </View>
+
 
       {/* Services Section */}
       <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>
-          <Icon name="stethoscope" size={20} color="#7D3C98" /> Our Services
+          <Icon name="stethoscope" size={20} color="#02989D" /> Our Services
         </Text>
         <View style={styles.serviceGrid}>
           <View style={styles.serviceCard}>
-            <Icon name="heart" size={60} color="#7D3C98" style={styles.serviceIcon} />
-            <Text style={styles.serviceTitle}>Ultrasound Scanning</Text>
+            <Icon name="heart" size={60} color="#02989D" style={styles.serviceIcon} />
+            <Text style={[styles.serviceTitle, { color: "#02989D" }]}>Ultrasound Scanning</Text>
           </View>
           <View style={styles.serviceCard}>
-            <Icon name="dna" size={60} color="#7D3C98" style={styles.serviceIcon} />
-            <Text style={styles.serviceTitle}>Digital X-Ray</Text>
+            <Icon name="scan" size={60} color="#02989D" style={styles.serviceIcon} />
+            <Text style={[styles.serviceTitle, { color: "#02989D" }]}>Digital X-Ray</Text>
           </View>
           <View style={styles.serviceCard}>
-            <Icon name="heartbeat" size={60} color="#7D3C98" style={styles.serviceIcon} />
-            <Text style={styles.serviceTitle}>2D ECHO & ECG</Text>
+            <Icon name="heartbeat" size={60} color="#02989D" style={styles.serviceIcon} />
+            <Text style={[styles.serviceTitle, { color: "#02989D" }]}>2D ECHO & ECG</Text>
           </View>
         </View>
       </View>
